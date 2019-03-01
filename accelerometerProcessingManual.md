@@ -1,5 +1,6 @@
 # HBC lab accelerometer analysis
 
+:with_toc_data
 
 # Accelerometer materials on the server
 
