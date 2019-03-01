@@ -8,7 +8,8 @@
   * [Downloading data](#downloading-data)
 - [of axis: 3](#of-axis--3)
   * [Exporting downloaded data](#exporting-downloaded-data)
-
+  * [Wear Time Validation](#wear-time-validation)
+  * [Sleep Analysis](#sleep-analysis)
 
 
 # Accelerometer materials on the server
