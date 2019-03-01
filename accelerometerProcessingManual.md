@@ -127,8 +127,43 @@ The scripts and data output for the procedures described here are located on our
 > **TIP** For studies where subjects wear the device for multiple timepoints during study, add them as LAB ID_#, where # refers to the "session" replicate.  Example:  for EXTEND they wear the device 8 times, so pre-testing is LAB ID_1, Month 1 wear is LAB ID_2, Month 2 wear is LAB ID_3. If the participant doesn't have Month 1 data, then Month 2 is still LAB ID_3. If you're unsure, ask the Exercise Specialist.
 
 
+## Wear Time Validation
+
+1. Open ActiLife Program
+    * Click on the tab “Wear Time Validation” (second tab from the left)
+
+2. Select a dataset.  Look for LAB ID (DATE), if you do not see the correct file in the list, click on the “Add Dataset” button and select the correct file.  
+    * Once your dataset is selected make sure the small checkbox to the left of the dataset name is checked.
+
+3. Select a Wear Time Algorithm (Choi 2011) by clicking on the dropdown box in the top left hand corner, underneath the “Devices” tab
+    * Check the default setting for the algorithm, NOT custom
+    * Do not change any of the Optional Screen Parameters (the only thing checked should be “Evaluate Wear Sensor Data”)
+
+4. Click “Calculate” at the bottom of the window that shows the selected data set (show preview graphs should be checked)
+
+5. Either automatically or by selecting “Details”, a pop-up window will show wear and non-wear times
+    * Wear and non-wear times should be confirmed or changed by clicking on the blue hyperlink next to each period
+    * Consult with the subject log to determine wear/non-wear times 
+        * > **TIP** You cannot manually add in any times the subject said they were not wearing the watch, you can only confirm/deny the times that are detected by the algorithm.  
+    * Click on “Open file in Advanced Details” -> Export -> Day and Wear Info. 
+    * Save the file titled `LABID_StartDate_WearTime` in `Repositories\Accelerometer_Data\WearTime` 
+    * Click save changes and the .agd file will now reflect these changes.
 
 
-
+## Sleep Analysis
+1. Open Actilife Program
+2. Click on the “Sleep” tab
+3. Select dataset (look for the Lab ID and correct date) from `C:\Users\hbclab\Documents\ActiGraph\ActiLife\Downloads`
+    * Change preferences to **Normal View** and either **24hr/48 hr can be used** 
+4. Select sleep algorithm **Cole-Kripke** from the dropdown menu in the top right-hand corner of the screen
+5. Click “Detect Sleep Periods”
+6. Sleep periods will appear in the box in the top right hand corner
+    * Use subject log to edit sleep periods
+    * Be very careful, you may need to add, delete or drastically edit time periods
+    * Be sure to save any edits you’ve made
+7. Click **export report**
+    * In the pop-up box, verify that all boxes are checked( “Create CSV”,  “Create PDF” and the “Show all graphs” and “Show Times on Graphs” are checked
+    * Select **Create Report**
+    * The report will open once and it will ask you to name both files. Save as `LABID_Date_Sleep` in `Repositories\Accelerometer_Data\Sleep`
 
 
