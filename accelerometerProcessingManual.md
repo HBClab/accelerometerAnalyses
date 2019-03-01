@@ -182,7 +182,7 @@ Procedures initially developed in a word doc named `Analysis_steps_2018` by Rach
 
 2. Run the R notebook `4-Analysis/Analysis.Rmd`
 
-## Minute-based Wear time and Sleep Validation (URA)
+## Minute-based Wear time and Sleep Validation
 
 1. Check the `Repositories/Accelerometer_Data/Assignments.xlsx` to see which subjects to complete
 
