@@ -27,8 +27,7 @@ The scripts and data output for the procedures described here are located on our
 
 ## Initializing the accelerometer before use
 
-### Initialize a device: 
-1. Note that Accelerometers must have a battery level over 80% to be initialized.   
+1. Accelerometers must have a battery level over 80% to be initialized.   
 2. Open Actilife software.  
 3. Make sure that any data currently on the device is already downloaded and stored because the initialization process will delete any data currently stored on the device  
 4. Select “Devices” tab  
@@ -60,8 +59,7 @@ The scripts and data output for the procedures described here are located on our
 8. Click **Subject Info** on the bottom right of the pop-up window. This information should be on your set up sheet.
 * Enter information under appropriate column
 * To keep information anonymous, use Lab ID as subject name.
-* Select **Wrist** under Limb, enter subject-appropriate side and select “Non-Dominant” under Dominance (the device should always be worn on the subject’s non-dominant hand)
-> **TIP** Double check the entered data!
+* Select **Wrist** under Limb, enter subject-appropriate side and select “Non-Dominant” under Dominance (the device should always be worn on the subject’s non-dominant hand). **Double check the entered data!**
 
 9. Click **Initialize Device** on the bottom right of the window
 * The status bar will say **finished initializing** when it is completed
