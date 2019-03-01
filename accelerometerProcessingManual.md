@@ -45,7 +45,7 @@ The scripts and data output for the procedures described here are located on our
 
 	* The accelerometers should be set to record from 12:00 am to 12:00 am over 7 days. There will be a few times when you may set them to record for fewer days, but the most common is 7 days. 
 
-> Example:  if you are giving the accelerometer out on 6/13/2018, the device would be set to  start recording on 6/14/2018 at 12:00 am and stop recording at 6/21/2018 at 12:00 am.
+    > Example:  if you are giving the accelerometer out on 6/13/2018, the device would be set to  start recording on 6/14/2018 at 12:00 am and stop recording at 6/21/2018 at 12:00 am.
 
     
 * Set **Sample rate** to 60 Hz. Sample rate should already be set at 60 hz, but double check to make sure. 
