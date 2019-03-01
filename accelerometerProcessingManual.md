@@ -27,7 +27,7 @@ The scripts and data output for the procedures described here are located on our
 
 ## Initializing the accelerometer before use
 
-* **Initialize a device:**  
+### Initialize a device: 
 1. Note that Accelerometers must have a battery level over 80% to be initialized.   
 2. Open Actilife software.  
 3. Make sure that any data currently on the device is already downloaded and stored because the initialization process will delete any data currently stored on the device  
