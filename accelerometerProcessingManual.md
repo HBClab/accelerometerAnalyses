@@ -121,10 +121,10 @@ The scripts and data output for the procedures described here are located on our
         * Convert
         * Cut and Paste file [lab id (start date)60sec] from downloads on Eprime computer to `vosslabhpc\Projects\Accelerometer\3-Data\RawFiles\60secondDataTables`
     * Enter the subject’s LabID into the sublist located in `vosslabhpc\Projects\Accelerometer\4-Analysis\specs_sublist` 
-    > **TIP** If the sublist does not open on the computer, open the file through notepad
+        > **TIP** If the sublist does not open on the computer, open the file through notepad
 
 2. Update the `ActiGraph_analysis_summary.xlsx` file to reflect what has been done for each subject. This file is found at `vosslabhpc\Projects\Accelerometer\4-Analysis\ ActiGraph_analysis_summary`
-> **TIP** For studies where subjects wear the device for multiple timepoints during study, add them as LAB ID_#, where # refers to the "session" replicate.  Example:  for EXTEND they wear the device 8 times, so pre-testing is LAB ID_1, Month 1 wear is LAB ID_2, Month 2 wear is LAB ID_3. If the participant doesn't have Month 1 data, then Month 2 is still LAB ID_3. If you're unsure, ask the Exercise Specialist.
+    > **TIP** For studies where subjects wear the device for multiple timepoints during study, add them as LAB ID_#, where # refers to the "session" replicate.  Example:  for EXTEND they wear the device 8 times, so pre-testing is LAB ID_1, Month 1 wear is LAB ID_2, Month 2 wear is LAB ID_3. If the participant doesn't have Month 1 data, then Month 2 is still LAB ID_3. If you're unsure, ask the Exercise Specialist.
 
 
 ## Wear Time Validation
