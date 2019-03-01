@@ -96,7 +96,7 @@ The scripts and data output for the procedures described here are located on our
     * Under Download Options, do not select “Create Clinical Report”
     * Select “Create AGD File:”
     * Epoch: 60 seconds
-    * # of axis: 3
+    * Number (#) of axis: 3
     * Select: Steps, Lux and Inclinometer 
     * **Do not select** Low Frequency Extension
     * Add biometric and user information
