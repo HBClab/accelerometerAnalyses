@@ -2,11 +2,10 @@
 
 <!-- (https://ecotrust-canada.github.io/markdown-toc/) -->
 - [Accelerometer materials on the server](#accelerometer-materials-on-the-server)
-- [Data collection and storage](#data-collection-and-storage)
+- [Data collection and file management](#data-collection-and-file-management)
   * [Device maintenance and check-out](#device-maintenance-and-check-out)
   * [Initializing the accelerometer before use](#initializing-the-accelerometer-before-use)
   * [Downloading data](#downloading-data)
-- [of axis: 3](#of-axis--3)
   * [Exporting downloaded data](#exporting-downloaded-data)
   * [Wear Time Validation](#wear-time-validation)
   * [Sleep Analysis](#sleep-analysis)
@@ -20,7 +19,7 @@ The scripts and data output for the procedures described here are located on our
 **Document history:** The manual was initially developed and written as a word document by Lauren Reist and Rachel Clark Cole, and updated by Lauren and Abby Mickley in August 2018. As of March 2019, we are putting the manual into a markdown file so that we can more easily track changes collaborative edits time. 
 
 
-# Data collection and storage
+# Data collection and file management
 
 ## Device maintenance and check-out 
 
