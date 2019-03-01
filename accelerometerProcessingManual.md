@@ -1,6 +1,11 @@
 # HBC lab accelerometer analysis
 
-:with_toc_data
+- [Accelerometer materials on the server](#accelerometer-materials-on-the-server)
+- [Data collection and storage](#data-collection-and-storage)
+  * [Device maintenance and check-out](#device-maintenance-and-check-out)
+  * [Initializing the accelerometer before use](#initializing-the-accelerometer-before-use)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
 # Accelerometer materials on the server
 
