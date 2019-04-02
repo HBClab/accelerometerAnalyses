@@ -1,0 +1,42 @@
+---
+title: "R Notebook for analyzing ActiGraph GT9x Link accelerometer data"
+Author: "Rachel Clark, Summer 2018 (rachel-clark@uiowa.edu for questions)"
+output:
+  html_document:
+    number_sections: true
+    toc: true
+    toc_float: true
+  pdf_document: default
+  word_document:
+    toc: true
+---
+
+This notebook should walk you through analyzing the data from the ActiGraph GT9x Link device using the "GGIR approach". The GGIR approach is used for the purpose of calculating the number of minutes a participant spent in moderate-to-vigorous physical activity (MVPA) per day. GGIR is a package within R that was designed to analyze accelerometer data from a few different devices. It has been described and used in Hildebrand et al., 2014. The main drawbacks of GGIR are that it does not differentiate between sedentary and light activity, nor does it calculate minute-by-minute categorizations of activity/energy/MET level. It also does not allow for any input of self-report wear time, meaning when the participant may have taken the watch off. Not accounting for watch off time would likely overestimate sedentary time, but it shouldn't have much impact on daily MVPA time unless the person took it off during exercise. 
+
+
+# Run GGIR
+Data (raw data file) need to be in individual folders within data directory
+```{r}
+# load needed R libraries  (make sure GGIR and zoo are installed, found under the Tools menu)
+library(GGIR)
+library(zoo)
+
+#g.shell.GGIR calls g.part1 - g.part4
+#see manual for clarification on optional input arguments
+
+##Usage  g.shell.GGIR(mode=c(1,2),datadir=c(),outputdir=c(),studyname=c(),f0=1,f1=0,do.report=c(2),overwrite=FALSE,visualreport=FALSE)
+
+
+## the RAW csv file (which can be converted through the ActiLife software using the GT3X --> CSV option) needs to be in a subject-specific folder (the GGIR package just looks for the first data file within the folder you point it to)
+# manually change the datadir folder to the correct subject number (and change the entire path as needed)
+
+run_shell=g.shell.GGIR(mode=c(1,2),datadir=c("/Volumes/vosslabhpc/Projects/Accelerometer/3-Data/792"),outputdir=c("/Volumes/vosslabhpc/Projects/Accelerometer/5-Results"),studyname=c(),f0=1,f1=0,do.report=c(2),overwrite=FALSE,visualreport=FALSE)
+
+## change the output path as needed also. GGIR will create a subject-specific folder for the output, called "output_sub#".
+## each subject takes ~20 minutes, though may be slower. I tend to run batches all at once and just leave running overnight.
+```
+
+Output is saved in sub specific folders: output_sub#/results/part2_daysummary.csv
+Outcomes of interest: E1M_T100 and E5M_T100 (1-minute and 5-minute epochs) of MVPA
+
+Typically I calculate average MVPA per day based on the day totals (we try to record 7 days) and I calculate total average, as well as a "weekday specific average" and a "weekend specific average", though with retired older adults it doesn't differ much across weekday and weekend so I tend to report the average across all days. 

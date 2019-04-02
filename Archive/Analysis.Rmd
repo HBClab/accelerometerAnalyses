@@ -1,0 +1,285 @@
+---
+title: "R Notebook for analyzing ActiGraph GT9x Link accelerometer data"
+Author: Rachel Clark, Fall 2017
+output:
+  html_document:
+    number_sections: true
+    toc: true
+    toc_float: true
+  pdf_document: default
+  word_document:
+    toc: true
+---
+
+This notebook should walk you through analyzing the data from the ActiGraph GT9x Link device using the "Staudenmayer approach" and the "GGIR approach". The Staudenmayer approach is based on the paper titled "Methods to estimate aspects of physical activity and sedentary behavior from high-frequency wrist accelerometer measurement" by John Staudenmayer and colleagues, 2015 in Patty Freedson's lab, published in J Appl Physiol. The script based on this approach was made in-house by Rick Paulos from Kathy Janz' lab and shared with our lab in 2015. While this approach is great because it provides a label of sedentary or non-sedentary, along with a MET level, for every single minute, Kathy Janz warned us that it was not good at parsing between light activity and MVPA (mod-to-vig physical activity). We should continue checking to see if they develop updated tools for this analysis. Check for Freedson's recent publications online.  
+
+The GGIR approach is used for the purpose of calculating the number of minutes a participant spent in moderate-to-vigorous physical activity (MVPA) per day. GGIR is a package within R that was designed to analyze accelerometer data from a few different devices. It has been described and used in Hildebrand et al., 2014 (hence, why we used to call this the "Hildebrand approach"). The main drawbacks of GGIR are that it does not differentiate between sedentary and light activity, nor does it calculate minute-by-minute. So basically, no method gives us exactly what we want (which is average minutes per day spent sleeping, sedentary, light activity, and moderate-vigorous activity). Ideally we would have those values and they would be based on a minute-by-minute categorization process (because that could provide opportunities to analyze the data in other cool ways). But right now we don't have this capability (although the NIH has put a lot of money into the groups that are analyzing the NHANES data, so better methods should hopefully be coming out before long). Keep checking for updates on GGIR and other papers that describe how they analyze this type of data. 
+
+Goal- run all analysis in vosslabhpc
+
+Additional instructions to be used after this analysis can be found at /Volumes/vosslablss/Accelerometer/ActiGraph/Analysis/Analysis_steps_2018.docx
+
+Overview of steps taken before this notebook:
+-- Download and convert data
+-- Calculate and validate wear and sleep time files
+-- Add subject number to sublist and to the /Volumes/vosslablss/Accelerometer/ActiGraph/Analysis/ActiGraph_analysis_summary
+
+Overview of steps taken in this notebook:
+-- copy data from Repositories to server (and also move it from Repositories into RawFiles)
+-- create specs file
+-- Run wristdemo.60hz.R
+
+
+# Transfer data from Repositories to vosslabhpc server 
+(in repos because PC computer account with Actigraph, where data are saved, doesn't have access to main vosslabhpc server, but does have access to repos)
+```{bash DataTransfer}
+#!/bin/bash
+repos=/Volumes/VossLab/Repositories/Accelerometer_Data
+datadir=/Volumes/vosslabhpc/Projects/Accelerometer/3-Data
+
+sublist=$(cat /Volumes/vosslabhpc/Projects/Accelerometer/4-Analysis/specs_sublist.txt)
+
+for sub in $sublist
+
+do
+# copy the data into the correct folders on the server
+  mkdir ${datadir}/${sub}
+  cp ${repos}/${sub}*RAW.csv ${datadir}/
+  cp ${datadir}/${sub}*RAW.csv ${datadir}/${sub}/
+  
+  # move the data table into the permanent storage on the server and delete from the repositories
+  mv ${repos}/${sub}*60sec*.csv ${datadir}/RawFiles/60secondDataTables
+  
+  # move the raw csv file into the permanent storage on the server and delete from the repositories 
+  mv ${repos}/${sub}*RAW.csv ${datadir}/RawFiles/RawCSVFiles
+done
+```
+-- this step can take a little while since the files are quite large
+Troubleshooting: check that the sublist isn't defunct. Sometimes the sublist gets hidden characters in it if it's opened and saved through excel. Just open pico in the terminal and overwrite the sublist with a new one.
+Check that the path to the repositories is correct, as it can change depending on how it is mounted or connected
+
+# Make specs file
+```{bash}
+#!/bin/bash
+
+set -x
+
+#this script should take in a txt file of sub nums and create a CSV file with subid, filename, output name, start date, end date, on 7 lines for the 7 different days in the specs file, provided the appropriate .csv raw data files are available in /Volumes/vosslabhpc/Projects/Accelerometer/3-Data
+
+datadir=/Volumes/vosslabhpc/Projects/Accelerometer/3-Data
+specsfile=/Volumes/vosslabhpc/Projects/Accelerometer/3-Data/specs.csv
+sublist=$(cat /Volumes/vosslabhpc/Projects/Accelerometer/4-Analysis/specs_sublist.txt)
+#verify that sublist hasn't been corupted or in different format.
+echo $sublist
+
+cd ${scriptsdir}
+
+echo "Id,file.1,outfile,start,stop" >> ${specsfile}
+
+for sub in $sublist
+do
+    cd ${datadir}/${sub}
+
+    date_arr=($(find . -name "*.csv" | egrep -o [0-9]+-[0-9]+-[0-9]+))
+    date1=($(date -j -f "%Y-%m-%d" -v+1d "${date_arr}" +"%Y-%m-%d"))
+    date2=($(date -j -f "%Y-%m-%d" -v+2d "${date_arr}" +"%Y-%m-%d"))
+    date3=($(date -j -f "%Y-%m-%d" -v+3d "${date_arr}" +"%Y-%m-%d"))
+    date4=($(date -j -f "%Y-%m-%d" -v+4d "${date_arr}" +"%Y-%m-%d"))
+    date5=($(date -j -f "%Y-%m-%d" -v+5d "${date_arr}" +"%Y-%m-%d"))
+    date6=($(date -j -f "%Y-%m-%d" -v+6d "${date_arr}" +"%Y-%m-%d"))
+    
+start=($(date -j -f "%Y-%m-%d" "${date_arr}" +"%d-%b-%Y"))
+stop=($(date -j -f "%Y-%m-%d" -v+1d "${date_arr[0]}" +%d-%b-%Y))
+
+start1=($(date -j -f "%Y-%m-%d" -v+1d "${date_arr[0]}" +%d-%b-%Y))
+stop1=($(date -j -f "%Y-%m-%d" -v+2d "${date_arr[0]}" +%d-%b-%Y))
+
+start2=($(date -j -f "%Y-%m-%d" -v+2d "${date_arr[0]}" +%d-%b-%Y))
+stop2=($(date -j -f "%Y-%m-%d" -v+3d "${date_arr[0]}" +%d-%b-%Y))
+
+start3=($(date -j -f "%Y-%m-%d" -v+3d "${date_arr[0]}" +%d-%b-%Y))
+stop3=($(date -j -f "%Y-%m-%d" -v+4d "${date_arr[0]}" +%d-%b-%Y))
+
+start4=($(date -j -f "%Y-%m-%d" -v+4d "${date_arr[0]}" +%d-%b-%Y))
+stop4=($(date -j -f "%Y-%m-%d" -v+5d "${date_arr[0]}" +%d-%b-%Y))
+
+start5=($(date -j -f "%Y-%m-%d" -v+5d "${date_arr[0]}" +%d-%b-%Y))
+stop5=($(date -j -f "%Y-%m-%d" -v+6d "${date_arr[0]}" +%d-%b-%Y))
+
+start6=($(date -j -f "%Y-%m-%d" -v+6d "${date_arr[0]}" +%d-%b-%Y))
+stop6=($(date -j -f "%Y-%m-%d" -v+7d "${date_arr[0]}" +%d-%b-%Y))
+
+echo "$sub,$sub (${date_arr})RAW.csv,${sub}[${date_arr}].out,$start 12:00 AM,$stop 12:00 AM">>${specsfile}
+echo "$sub,$sub (${date_arr})RAW.csv,${sub}[${date1}].out,$start1 12:00 AM,$stop1 12:00 AM">>${specsfile}
+echo "$sub,$sub (${date_arr})RAW.csv,${sub}[${date2}].out,$start2 12:00 AM,$stop2 12:00 AM">>${specsfile}
+echo "$sub,$sub (${date_arr})RAW.csv,${sub}[${date3}].out,$start3 12:00 AM,$stop3 12:00 AM">>${specsfile}
+echo "$sub,$sub (${date_arr})RAW.csv,${sub}[${date4}].out,$start4 12:00 AM,$stop4 12:00 AM">>${specsfile}
+echo "$sub,$sub (${date_arr})RAW.csv,${sub}[${date5}].out,$start5 12:00 AM,$stop5 12:00 AM">>${specsfile}
+echo "$sub,$sub (${date_arr})RAW.csv,${sub}[${date6}].out,$start6 12:00 AM,$stop6 12:00 AM">>${specsfile}
+
+done
+```
+
+
+# Run Staudenmayer script
+need mod.RData and functions.for.models.60hz.R in the same folder as the subject folders, raw data files and specs file 
+```{r}
+# batch mode for left/right wrist @60hz (originally created by Rick Paulos)
+# first modified by Rachel Clark, 12/14/15
+# incorporated into R notebook fall 2017
+
+# comments start with # sign
+# clear work space
+rm(list=ls())     	
+
+# load needed R libraries  (previously installed) -- make sure these are installed on your computer
+library(tree)
+library(randomForest)
+library(data.table)
+
+# Show installed libraries
+ip <- as.data.frame(installed.packages()[,c(1,3:4)])
+rownames(ip) <- NULL
+ip <- ip[is.na(ip$Priority),1:2,drop=FALSE]
+print(ip, row.names=FALSE)
+
+# setwd sets working directory for your programs and data files
+setwd("/Volumes/vosslabhpc/Projects/Accelerometer/3-Data")
+getwd()    # show wd to confirm
+
+# read csv file with filenames, date(s) & time(s) on/off
+st= read.csv("specs.csv", header=TRUE, sep=',', stringsAsFactors= FALSE)
+#st$start <- strptime(st$start,format="%d-%b-%Y %I:%M %p")
+#st$stop  <- strptime(st$stop, format="%d-%b-%Y %I:%M %p")
+print(st)
+str(st)
+
+# these are the models from the paper
+load("mods.RData")
+
+# these are functions to estimate features, load data, etclis
+source("fuctions.for.models.60hz.R")
+
+win.width <- 60     # width of "windows" to analyze in seconds aka EPOCH
+
+#start of function to run in batch mode - similar to Macro in SAS
+main <- function(id, file.1, start, stop, outfile) {
+  # convert strings to datetime format
+  start <- strptime(start,format="%d-%b-%Y %I:%M %p")
+  stop  <- strptime(stop, format="%d-%b-%Y %I:%M %p")
+  str(id)
+  str(file.1)
+  str(start)
+  str(stop)
+  str(outfile)
+  # get start time & start date from csv file header section
+  hertz = 60
+  head.data <- readLines(paste(file.1),n=10)
+  start.time <- head.data[3]
+  start.time <- (strsplit(start.time,split=" ")[[1]][3])
+  start.date <- head.data[4]
+  start.date <- (strsplit(start.date,split=" ")[[1]][3])
+  start.time <- as.POSIXlt(strptime(paste(start.date,start.time),"%m/%d/%Y %H:%M:%S"))
+  n.to.skip = as.numeric(difftime(start,start.time,units="secs")*hertz)
+  n.to.read = as.numeric(difftime(stop,start,units="secs")*hertz)
+  ag.data <- fread(file.1,skip=10+n.to.skip,sep=",",header=F,colClasses=c("numeric","numeric","numeric"),showProgress=FALSE,nrows=n.to.read)
+  n <- dim(ag.data)[1]
+
+  # data.frame adds a new column with times
+  ag.data <- data.frame(time = start + (0:(n-1))/hertz,ag.data)
+  n <- dim(ag.data)[1]
+  mins <- ceiling(n/(60*win.width)) 
+
+  # compute statistics (features)
+  ag.data$min <- rep(1:mins,each=win.width*60)[1:n]
+  ag.data$vm <- sqrt(ag.data$V1^2+ag.data$V2^2+ag.data$V3^2)
+  ag.data$v.ang <- 90*(asin(ag.data$V1/ag.data$vm)/(pi/2))
+  ag.data.sum <- data.frame(mean.vm=tapply(ag.data$vm,ag.data$min,mean,na.rm=T),
+  sd.vm=tapply(ag.data$vm,ag.data$min,sd,na.rm=T),
+  mean.ang=tapply(ag.data$v.ang,ag.data$min,mean,na.rm=T),
+  sd.ang=tapply(ag.data$v.ang,ag.data$min,sd,na.rm=T),
+  p625=tapply(ag.data$vm,ag.data$min,pow.625),
+  dfreq=tapply(ag.data$vm,ag.data$min,dom.freq),
+  ratio.df=tapply(ag.data$vm,ag.data$min,frac.pow.dom.freq))
+
+  # Next line can be slow... (there is a faster library, but I haven't implemented it yet.)
+  ag.data.sum$start.time <- as.POSIXlt(tapply(ag.data$time,ag.data$min,min,na.rm=T),origin="1970-01-01 00:00.00 UTC")
+
+  # apply the models (estimates are for each 15 second epoch)
+
+  # MET estimates by random forest
+  ag.data.sum$METs.rf <- predict(rf.met.model,newdata=ag.data.sum)
+  ag.data.sum$METs.rf[ag.data.sum$sd.vm==0] <- 1
+
+  # MET estimates by linear regression
+  ag.data.sum$METs.lm <- predict(lm.met.model,newdata=ag.data.sum)
+  ag.data.sum$METs.lm[ag.data.sum$sd.vm==0] <- 1
+
+  # MET level estimates (rf and tree)
+  ag.data.sum$MET.lev.rf <- predict(rf.met.level.model,newdata=ag.data.sum)
+  ag.data.sum$MET.lev.tr <- predict(tr.met.level.model,newdata=ag.data.sum,type="class")
+
+  # sedentary or not estimates (rf and tree)
+  ag.data.sum$sed.rf <- predict(rf.sed.model,newdata=ag.data.sum)
+  ag.data.sum$sed.tr <- predict(tr.sed.model,newdata=ag.data.sum,type="class")
+
+  # locomotion or not estimates (rf and tree)
+  ag.data.sum$loc.rf <- predict(rf.loc.model,newdata=ag.data.sum)
+  ag.data.sum$loc.tr <- predict(tr.loc.model,newdata=ag.data.sum,type="class")
+
+  # end of calculations
+  print("Done with calculations")
+  # export entire results vector (array) to .csv text file
+  write.csv(ag.data.sum,outfile, row.names=FALSE, quote=FALSE)
+
+# end of main function
+}
+
+# call function, args are by position, call by value in R
+mapply(main, st$Id, st$file.1, st$start, st$stop, st$outfile)
+# end of program-- you should now see .out files for each day of accelerometer data for subject
+```
+
+# Concatenate the output files from the Staudenmayer script
+```{bash}
+#this should find all the .out files for the subject(s) in the sublist and concatenate the data into one file
+#!/bin/bash
+sublist=`cat /Volumes/vosslabhpc/Projects/Accelerometer/4-Analysis/specs_sublist.txt`
+datadir=/Volumes/vosslabhpc/Projects/Accelerometer/3-Data
+
+for sub in $sublist
+do
+cd ${datadir}
+cat ${sub}\[20* > ${sub}_output.csv
+#example: cat 644\[201* > 644_output.csv
+done
+```
+
+Prep for Minute-Based Wear and Sleep time validation (grad or URA):
+-- Manually, copy and paste the data from sub_output.csv into /Volumes/shared/VossLab/Repositories/Accelerometer_Data/Results/TEMPLATE_to_use.xls
+-- Double click on lower left corner of cell 2Q (to fill in date values all the way down)
+Save as sub#_output_YYYY-MM-DD  (e.g. 781_output_2017-11-09)
+
+Add subject number to the /Volumes/shared/VossLab/Repositories/Accelerometer_Data/Assignments.xlsx file so URA knows to complete manual edits of minutep-based wear and sleep time in output file.  
+
+For URA instructions, see Minute-Based section of /Volumes/vosslablss/Accelerometer/ActiGraph/Analysis/Analysis_steps_2018.docx document 
+
+
+# Run GGIR
+# Data need to be in individual folders within data directory (which we completed earlier in this notebook)
+```{r}
+# load needed R libraries  (make sure GGIR and zoo are installed)
+library(GGIR)
+library(zoo)
+
+# g.shell.GGIR calls g.part1 - g.part4
+# see GGIR manual in 4-Analysis folder for clarification on optional input arguments
+
+##Usage  g.shell.GGIR(mode=c(1,2),datadir=c(),outputdir=c(),studyname=c(),f0=1,f1=0,do.report=c(2),overwrite=FALSE,visualreport=FALSE)
+
+# manually change the folder to the correct subject number
+run_shell=g.shell.GGIR(mode=c(1,2),datadir=c("/Volumes/vosslabhpc/Projects/Accelerometer/3-Data/792"),outputdir=c("/Volumes/vosslabhpc/Projects/Accelerometer/5-Results"),studyname=c(),f0=1,f1=0,do.report=c(2),overwrite=FALSE,visualreport=FALSE)
+
+
+## Note: GGIR may stop working if the hpc server is too full and give a "read/write error". 
+```
