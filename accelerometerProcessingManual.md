@@ -112,14 +112,14 @@ The scripts and data output for the procedures described here are located on our
         * Select correct dataset by clicking on “Add Dataset” button, select file from the folder.
         * Make sure to uncheck “Add Column Headers to CSV”
         * Export CSV files, cut and paste the RAW CSV files into `Repositories\Accelerometer_Data`
-        * Move the GT3X file from downloads on the Eprime PC to `Repositories\Accelerometer_Data\RawGT3X_Files`
+        * Move the GT3X file from downloads on the Eprime PC to `Repositories\Accelerometer_Data\RawFiles\RawGT3X_Files`
     * Data Table
         * Open Actilife
         * File -> import/export/convert -> epoch to epoch -> AGD to CSV
         * CSV export mode: select Data Table
         * Add datasets of interest
         * Convert
-        * Cut and Paste file [lab id (start date)60sec] from downloads on Eprime computer to `Repositories\Accelerometer_Data\60secondDataTables`
+        * Cut and Paste file [lab id (start date)60sec] from downloads on Eprime computer to `Repositories\Accelerometer_Data\RawFiles\60secondDataTables`
 
 2. Update the `ActiGraph_analysis_summary.xlsx` file to reflect what has been done for each subject. This file is found at `vosslabhpc\Projects\Accelerometer\4-Analysis\ActiGraph_analysis_summary`
     > **TIP** For studies where subjects wear the device for multiple timepoints during study, add them as LAB ID_#, where # refers to the "session" replicate.  Example:  for EXTEND they wear the device 8 times, so pre-testing is LAB ID_1, Month 1 wear is LAB ID_2, Month 2 wear is LAB ID_3. If the participant doesn't have Month 1 data, then Month 2 is still LAB ID_3. If you're unsure, ask the Exercise Specialist.
