@@ -125,7 +125,7 @@ The scripts and data output for the procedures described here are located on our
         * Convert
         * Cut and Paste file [lab id (start date)60sec] from downloads on Eprime computer to `Repositories\Accelerometer_Data\60secondDataTables`
 
-2. Update the `ActiGraph_analysis_summary.xlsx` file to reflect what has been done for each subject. This file is found at `vosslabhpc\Projects\Accelerometer\4-Analysis\ ActiGraph_analysis_summary`
+2. Update the `ActiGraph_analysis_summary.xlsx` file to reflect what has been done for each subject. This file is found at `vosslabhpc\Projects\Accelerometer\4-Analysis\ActiGraph_analysis_summary`
     > **TIP** For studies where subjects wear the device for multiple timepoints during study, add them as LAB ID_#, where # refers to the "session" replicate.  Example:  for EXTEND they wear the device 8 times, so pre-testing is LAB ID_1, Month 1 wear is LAB ID_2, Month 2 wear is LAB ID_3. If the participant doesn't have Month 1 data, then Month 2 is still LAB ID_3. If you're unsure, ask the Exercise Specialist.
 
 
@@ -168,81 +168,6 @@ The scripts and data output for the procedures described here are located on our
     * Select **Create Report**
     * The report will open once and it will ask you to name both files. Save as `LABID_Date_Sleep` in `Repositories\Accelerometer_Data\Sleep`
 
-
-
-# Data analysis
-
-Procedures initially developed in a word doc named `Analysis_steps_2018` by Rachel Cole Clark in spring/summer 2018, and then updated winter 2019 by Matt Sodoma and Ellie Henry. As of March 2019, we are documenting the steps in a markdown file so that we can more easily track changes collaborative edits time. 
-
-**Before you start** make sure the device data has been initialized and downloaded according to the steps above.
-
-1. Check the file `Accelerometer/4-Analysis/ActiGraph_analysis_summary.xlsx` to determine which subjects need to be analyzed.
-
-2. Run the R notebook `4-Analysis/Analysis.Rmd`
-
-## Minute-based Wear time and Sleep Validation
-
-1. Check the `Repositories/Accelerometer_Data/Assignments.xlsx` to see which subjects to complete
-
-2. Open the output file `sub#_output.xls`. Each line should correspond with one 60-second epoch. 
-    * Open `4-Analysis/template.xls` and copy the data (without the headers) to the “all data” tab
-    * Open the `template.xls` file and “save as” `sub#_output_year-month-day` to `Accelerometer/5-Results/`
-
-3. Locate the subject’s wear time output report and sleep report (PDF second page is easiest to read) in the WearTime and Sleep folders. 
-    * `Repositories/Accelerometer_Data/Sleep`
-    * `Repositories/Accelerometer_Data/WearTime`
-
-4. Use the wear time output report and the sleep data to enter 0 or 1 into the Wear? and Awake? Columns as appropriate. If the data looks slightly different from the minute cut-points (for sleep or non-wear), adjust to match the data. 
-    * If the data **clearly** show that there is an error in one of the times indicated by either report, then you can use your best judgment to alter wear time or sleep within 10 minutes in either direction of the time point indicated on the report, but do not exceed the 10 minute from the time on the sleep or wear time report.
-    * When making decisions like this be sure you are not adjusting times to compensate for data that falls outside of the 10-minute window. In other words, unless data within 10 minutes clearly show something different than the report, stick to the report times. Do not regularly adjust data just because you can. Only adjust it if the data clearly indicate otherwise.  
-    * Do **not** change data if it is not indicated by a report or the activity log. Even if it appears that the watch wasn’t being worn for a period of time during the day, do not mark that data as non-wear time unless the activity log or wear time report indicates that the watch wasn’t being worn.
-    * For sleep and non-wear time, typically the reports will indicate the first minute that is either asleep, awake, wear or non-wear. For example, if the sleep report says 11:23 pm, unless the data clearly show that sleep occurred at a different minute (within 10 minutes on either side), then indicate 11:23 as the first sleep minute (0 in the awake column). The same goes for the first minute identified as sleep, wake, wear or non-wear. Assume the first minute noted in the report is the first minute where the new activity occurs (sleep, wake, wear or non-wear), rather than being the last minute of the previous category. 
-
-## Summarize the data using the pivot table
-
-1. Update the pivot table in the first sheet (“Summary_pivots”) to source data from the “All_Data” sheet.
-    * Select PivotTable Analyze (tab in the toolbar at the top of the page) 
-    * Under PivotTable Analyze tab, click “Change Data Source” 
-    * Highlight all data on the All_Data sheet 
-        > **TIP** click on cell A1, hold the command and shift keys down, press right arrow, followed by down arrow to select all the data) 
-    * Click okay (or hit enter)
-
-2. Confirm that you are filtering out wear=0 datapoints (non-wear times).
-    * Also confirm you filter out “start” from the row labels dropdown in column A.
-    * Also confirm that the days for this subject are checked
-
-3. The pivot table is set up to summarize the data from the sed.rf variable. For example, Row label=1 (meaning awake) and column “sedentary” shows the number of awake sedentary minutes for each day.  The values in the Summary Chart (top middle of the sheet, underneath the blue heading) should also update after the pivot table is updated. 
-
-4. Update other aspects of the Summary chart 
-    * Update subject number in blue heading
-    * Update data start date (based off of first start date in All_data sheet) 
-    * Click on bottom right corner of cell, use fill handle (small black cross) to drag horizontally across the other days. This will automatically add the subsequent dates in the following boxes.
-    * Some participants may wear the accelerometer a different number of days than other participants; make sure this is reflected in the data by deleting or adding days as needed.
-
-5. Check to see if the days and dates are matching up to the pivot table by double clicking on a cell within the SUMMARY table. Verify that the reference cell from the pivot table is the correct data.
-
-6. Update the Weekend/Weekday Minutes Table (middle of the sheet)
-    * Each cell corresponds to information in the SUMMARY chart above for Sedentary, Light, MVPA (Moderate-Vigorous Physical Activity) and Sleep. 
-        * Double click on one cell (Ex: Total Weekend Sed mins) and see if it corresponds to the correct cells. 
-        * If it does not match, click and drag highlighted box(es) in Summary table to update as necessary (note: Weekday = Monday-Friday, Weekend = Saturday-Sunday)
-        * Manually enter the number of weekend and weekday days in the data. Note some studies are less than 7 days, so make sure to check and manually enter in the correct number of weekend and weekdays.
-
-7. Update MVPA category once done running R notebook
-    * Insert MVPA info from GGIR output `(E1M_T100 and E5M_T100)` into the excel sheet. The sheet can be found in the subject output folder within `daysummary.xls` (column P and Q)
-    * `/Volumes/vosslabhpc/Projects/Accelerometer/5-Results/output_(sub#)/results/part2_daysummary.csv`
-    * Copy to sheet, then transpose each column E1M_T100 to row 9, E5M_T100 to row 10
-
-8. Copy values found in Totals, Weekend Minutes, and Weekday Minutes into the `/Volumes/vosslabhpc/Projects/Accelerometer/6-Outputs/ALL_Accel_data_summary.xlsx`
-    * Be sure to paste **values only** and not formulas
-    * Enter in date manually, not updating correctly
-    * Drag down formulas from existing row
-
-9. Update the `/Volumes/vosslabhpc/Projects/Accelerometer/4-Analysis/ActiGraph_analysis_summary.xlsx` to show that you completed the analysis and copied the values into the summary data sheet. 
-
-## Make Activity Reports
-
-1. Copy and paste updated graphs into a Report and save as `.pdf`
-2. Ready to send to the participant!
 
 
 
