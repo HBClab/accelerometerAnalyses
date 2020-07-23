@@ -116,7 +116,7 @@ The scripts and data output for the procedures described here are located on our
         * Select correct dataset by clicking on “Add Dataset” button, select file from the folder.
         * Make sure to uncheck “Add Column Headers to CSV”
         * Export CSV files, cut and paste the RAW CSV files into `Repositories\Accelerometer_Data`
-        * Move the GT3X file from downloads on the Eprime PC to `vosslabhpc\Projects\Accelerometer\3-Data\RawFiles\RawGT3X_Files`
+        * Move the GT3X file from downloads on the Eprime PC to `Repositories\Accelerometer_Data\RawGT3X_Files`
     * Data Table
         * Open Actilife
         * File -> import/export/convert -> epoch to epoch -> AGD to CSV
