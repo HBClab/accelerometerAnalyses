@@ -123,7 +123,7 @@ The scripts and data output for the procedures described here are located on our
         * CSV export mode: select Data Table
         * Add datasets of interest
         * Convert
-        * Cut and Paste file [lab id (start date)60sec] from downloads on Eprime computer to `vosslabhpc\Projects\Accelerometer\3-Data\RawFiles\60secondDataTables`
+        * Cut and Paste file [lab id (start date)60sec] from downloads on Eprime computer to `Repositories\Accelerometer_Data\60secondDataTables`
     * Enter the subject’s LabID into the sublist located in `vosslabhpc\Projects\Accelerometer\4-Analysis\specs_sublist` 
         > **TIP** If the sublist does not open on the computer, open the file through notepad
 
