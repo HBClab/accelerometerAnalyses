@@ -9,10 +9,6 @@
   * [Exporting downloaded data](#exporting-downloaded-data)
   * [Wear Time Validation](#wear-time-validation)
   * [Sleep Analysis](#sleep-analysis)
-- [Data analysis](#data-analysis)
-  * [Minute-based Wear time and Sleep Validation (URA)](#minute-based-wear-time-and-sleep-validation--ura-)
-  * [Summarize the data using the pivot table](#summarize-the-data-using-the-pivot-table)
-  * [Make Activity Reports](#make-activity-reports)
 
 
 # Accelerometer materials on the server
